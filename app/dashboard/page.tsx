@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import StatusBanner from "@/app/components/StatusBanner";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 import CalendarView from "./components/CalendarView";
-import type { EventInput, DateClickArg, EventClickArg } from "@fullcalendar/core";
+import type { EventInput } from "@fullcalendar/core";
 import type { CourseDraft } from "@/app/components/CourseForm";
 import { useLanguage } from "@/app/components/LanguageProvider";
 import {
@@ -27,7 +27,7 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
   const [events, setEvents] = useState<EventInput[]>([]);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [selectedEvent, setSelectedEvent] = useState<EventClickArg["event"] | EventInput | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<EventInput | null>(null);
   const [editingDraft, setEditingDraft] = useState<CourseDraft | null>(null);
   const [editingCode, setEditingCode] = useState<string | null>(null);
   const [editingEventId, setEditingEventId] = useState<string | null>(null);
@@ -70,12 +70,18 @@ export default function DashboardPage() {
     load();
   }, [router, t]);
 
-  const handleDateClick = (arg: DateClickArg) => {
-    setSelectedDate(arg.dateStr);
+  const handleDateClick = (arg: { dateStr?: string } | unknown) => {
+    if (!arg || typeof arg !== "object") return;
+    const maybe = arg as { dateStr?: string };
+    if (!maybe.dateStr) return;
+    setSelectedDate(maybe.dateStr);
   };
 
-  const handleEventClick = (arg: EventClickArg) => {
-    setSelectedEvent(arg.event);
+  const handleEventClick = (arg: { event?: EventInput } | unknown) => {
+    if (!arg || typeof arg !== "object") return;
+    const maybe = arg as { event?: EventInput };
+    if (!maybe.event) return;
+    setSelectedEvent(maybe.event);
   };
 
   const normalizeDate = (value: Date) => new Date(value.getFullYear(), value.getMonth(), value.getDate());
