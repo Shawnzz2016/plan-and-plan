@@ -35,8 +35,8 @@ export async function hasConflicts(params: {
     if (error) throw error;
     const events = (data ?? []) as EventInput[];
     for (const event of events) {
-      const start = event.start ? new Date(event.start) : null;
-      const end = event.end ? new Date(event.end) : null;
+      const start = toDate(event.start);
+      const end = toDate(event.end);
       if (!start || !end) continue;
       const s = start.getHours() * 60 + start.getMinutes();
       const e = end.getHours() * 60 + end.getMinutes();
@@ -46,6 +46,19 @@ export async function hasConflicts(params: {
     }
   }
   return false;
+}
+
+function toDate(value: unknown) {
+  if (value instanceof Date) return value;
+  if (typeof value === "string" || typeof value === "number") {
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  }
+  if (Array.isArray(value) && value.length) {
+    const parsed = new Date(value[0] as unknown as string);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  }
+  return null;
 }
 
 function toMinutes(time: string) {
