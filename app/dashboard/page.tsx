@@ -125,12 +125,21 @@ export default function DashboardPage() {
 
   const filtered = filterEvents();
 
+  const toDate = (value: unknown) => {
+    if (value instanceof Date) return value;
+    if (typeof value === "string" || typeof value === "number") {
+      const parsed = new Date(value);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+    if (Array.isArray(value) && value.length) {
+      const parsed = new Date(value[0] as unknown as string);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+    return null;
+  };
+
   const grouped = filtered.reduce<Record<string, EventInput[]>>((acc, event) => {
-    const start = event.start
-      ? typeof event.start === "string"
-        ? new Date(event.start)
-        : event.start
-      : null;
+    const start = toDate(event.start);
     if (!start) return acc;
     const key = start.toISOString().slice(0, 10);
     acc[key] = acc[key] ? [...acc[key], event] : [event];
