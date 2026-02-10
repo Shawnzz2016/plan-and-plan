@@ -4,13 +4,13 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import type { EventInput, DateClickArg, EventClickArg } from "@fullcalendar/core";
+import type { EventInput } from "@fullcalendar/core";
 import { useEffect, useState } from "react";
 
 export default function CalendarView(props: {
   events: EventInput[];
-  onDateClick?: (arg: DateClickArg) => void;
-  onEventClick?: (arg: EventClickArg) => void;
+  onDateClick?: (arg: unknown) => void;
+  onEventClick?: (arg: unknown) => void;
 }) {
   const { events, onDateClick, onEventClick } = props;
   const [isNarrow, setIsNarrow] = useState(false);
