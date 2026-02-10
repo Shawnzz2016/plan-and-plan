@@ -48,8 +48,21 @@ export default function CourseDetailModal(props: {
 
   if (!event) return null;
 
-  const start = event.start ? new Date(event.start) : null;
-  const end = event.end ? new Date(event.end) : null;
+  const toDate = (value: unknown) => {
+    if (value instanceof Date) return value;
+    if (typeof value === "string" || typeof value === "number") {
+      const parsed = new Date(value);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+    if (Array.isArray(value) && value.length) {
+      const parsed = new Date(value[0] as unknown as string);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+    return null;
+  };
+
+  const start = toDate(event.start);
+  const end = toDate(event.end);
   const format = (value: Date | null) => (value ? value.toLocaleString() : "-");
 
   const teacher = (event.extendedProps?.teacher as string) || "-";

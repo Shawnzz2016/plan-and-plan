@@ -86,6 +86,19 @@ export default function DashboardPage() {
 
   const normalizeDate = (value: Date) => new Date(value.getFullYear(), value.getMonth(), value.getDate());
 
+  const toDate = (value: unknown) => {
+    if (value instanceof Date) return value;
+    if (typeof value === "string" || typeof value === "number") {
+      const parsed = new Date(value);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+    if (Array.isArray(value) && value.length) {
+      const parsed = new Date(value[0] as unknown as string);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+    return null;
+  };
+
   const filterEvents = () => {
     const now = new Date();
     const todayStart = normalizeDate(now);
@@ -104,11 +117,7 @@ export default function DashboardPage() {
       if (search && !haystack.includes(search.toLowerCase())) {
         return false;
       }
-      const start = event.start
-        ? typeof event.start === "string"
-          ? new Date(event.start)
-          : event.start
-        : null;
+      const start = toDate(event.start);
       if (!start) return false;
       if (filter === "today") {
         return start >= todayStart && start < todayEnd;
@@ -124,19 +133,6 @@ export default function DashboardPage() {
   };
 
   const filtered = filterEvents();
-
-  const toDate = (value: unknown) => {
-    if (value instanceof Date) return value;
-    if (typeof value === "string" || typeof value === "number") {
-      const parsed = new Date(value);
-      return Number.isNaN(parsed.getTime()) ? null : parsed;
-    }
-    if (Array.isArray(value) && value.length) {
-      const parsed = new Date(value[0] as unknown as string);
-      return Number.isNaN(parsed.getTime()) ? null : parsed;
-    }
-    return null;
-  };
 
   const grouped = filtered.reduce<Record<string, EventInput[]>>((acc, event) => {
     const start = toDate(event.start);
@@ -219,8 +215,8 @@ export default function DashboardPage() {
                 ) : (
                   groupKeys.map((key) => {
                     const dayEvents = grouped[key].sort((a, b) => {
-                      const aStart = typeof a.start === "string" ? new Date(a.start) : a.start;
-                      const bStart = typeof b.start === "string" ? new Date(b.start) : b.start;
+                      const aStart = toDate(a.start);
+                      const bStart = toDate(b.start);
                       return (aStart?.getTime() || 0) - (bStart?.getTime() || 0);
                     });
                     const dateLabel = new Date(key).toLocaleDateString();
@@ -231,16 +227,8 @@ export default function DashboardPage() {
                         </div>
                         <div className="space-y-2">
                           {dayEvents.map((event) => {
-                            const start = event.start
-                              ? typeof event.start === "string"
-                                ? new Date(event.start)
-                                : event.start
-                              : null;
-                            const end = event.end
-                              ? typeof event.end === "string"
-                                ? new Date(event.end)
-                                : event.end
-                              : null;
+                            const start = toDate(event.start);
+                            const end = toDate(event.end);
                             const timeLabel =
                               start && end
                                 ? `${start.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} - ${end.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
@@ -314,16 +302,8 @@ export default function DashboardPage() {
           onEditSingle={() => {
             const event = selectedEvent;
             if (!event) return;
-            const start = event.start
-              ? typeof event.start === "string"
-                ? new Date(event.start)
-                : event.start
-              : null;
-            const end = event.end
-              ? typeof event.end === "string"
-                ? new Date(event.end)
-                : event.end
-              : null;
+            const start = toDate(event.start);
+            const end = toDate(event.end);
             if (!start || !end) return;
             const date = start.toISOString().slice(0, 10);
             const startHour = String(start.getHours()).padStart(2, "0");
