@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 
 type CourseEventLike = {
   title?: string;
-  start?: Date | string | null;
-  end?: Date | string | null;
+  start?: Date | string | number | number[] | null;
+  end?: Date | string | number | number[] | null;
   extendedProps?: Record<string, unknown> | null;
   id?: string | null;
 };
