@@ -31,15 +31,23 @@ export default function CalendarView(props: {
       setSlotRange({ min: "08:00:00", max: "20:00:00" });
       return;
     }
+    const toDate = (value: unknown) => {
+      if (value instanceof Date) return value;
+      if (typeof value === "string" || typeof value === "number") {
+        const parsed = new Date(value);
+        return Number.isNaN(parsed.getTime()) ? null : parsed;
+      }
+      if (Array.isArray(value) && value.length) {
+        const parsed = new Date(value[0] as unknown as string);
+        return Number.isNaN(parsed.getTime()) ? null : parsed;
+      }
+      return null;
+    };
     let earliest = 8;
     let latest = 20;
     for (const event of events) {
-      const start =
-        typeof event.start === "string"
-          ? new Date(event.start)
-          : event.start ?? null;
-      const end =
-        typeof event.end === "string" ? new Date(event.end) : event.end ?? null;
+      const start = toDate(event.start);
+      const end = toDate(event.end);
       if (start) {
         earliest = Math.min(earliest, start.getHours());
       }
