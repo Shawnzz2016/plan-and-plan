@@ -99,7 +99,9 @@ export default function CalendarView(props: {
         }}
         slotMinTime={slotRange.min}
         slotMaxTime={slotRange.max}
-      slotDuration="00:30:00"
+        slotDuration="00:30:00"
+        slotLabelInterval="01:00"
+        slotLabelFormat={{ hour: "numeric" }}
       expandRows
       allDaySlot={false}
       dayHeaderFormat={{ weekday: "short", day: "numeric" }}
@@ -111,7 +113,9 @@ export default function CalendarView(props: {
           <div className="fc-event-content-custom">
             <div className="fc-event-title">{arg.event.title}</div>
             {arg.timeText ? <div className="fc-event-time">{arg.timeText}</div> : null}
-            {location ? <div className="fc-event-location">{location}</div> : null}
+            {!isNarrow && location ? (
+              <div className="fc-event-location">{location}</div>
+            ) : null}
           </div>
         );
       }}

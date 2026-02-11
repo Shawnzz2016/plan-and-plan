@@ -208,18 +208,30 @@
   align-items: flex-start;
 }
 
+.fc-responsive .fc-timegrid-slot {
+  height: 3.2rem;
+}
+
+.fc-responsive .fc-timegrid-slot-minor {
+  height: 1.6rem;
+}
+
+.fc-responsive .fc-timegrid-body table {
+  min-width: 520px;
+}
+
+.fc-responsive .fc-timegrid-col {
+  min-width: 96px;
+}
+
 @media (max-width: 360px) {
-  .fc-responsive .fc-timegrid-slot {
-    height: 2.6rem;
-  }
-  .fc-responsive .fc-timegrid-slot-minor {
-    height: 1.3rem;
-  }
   .fc-responsive .fc-event-title {
-    font-size: 0.7rem;
-  }
-  .fc-responsive .fc-event-time,
-  .fc-responsive .fc-event-location {
     font-size: 0.66rem;
+  }
+  .fc-responsive .fc-event-time {
+    font-size: 0.62rem;
+  }
+  .fc-responsive .fc-event-location {
+    font-size: 0.62rem;
   }
 }
