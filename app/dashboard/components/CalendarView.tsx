@@ -69,12 +69,14 @@ export default function CalendarView(props: {
         height="auto"
         events={events}
         nowIndicator
+        eventMinHeight={72}
+        eventShortHeight={72}
         headerToolbar={
           isNarrow
             ? {
-                left: "prev,next",
-                center: "title",
-                right: "today timeGridWeek,timeGridDay,dayGridMonth",
+                left: "prev,next title today timeGridWeek,timeGridDay,dayGridMonth",
+                center: "",
+                right: "",
               }
             : {
                 left: "prev,next today",
@@ -83,8 +85,16 @@ export default function CalendarView(props: {
               }
         }
         views={{
-          timeGridWeek: { buttonText: isNarrow ? "W" : "Week" },
-          timeGridDay: { buttonText: isNarrow ? "D" : "Day" },
+          timeGridWeek: {
+            buttonText: isNarrow ? "W" : "Week",
+            titleFormat: isNarrow
+              ? { month: "short", day: "numeric" }
+              : undefined,
+          },
+          timeGridDay: {
+            buttonText: isNarrow ? "D" : "Day",
+            titleFormat: { month: "short", day: "numeric", year: "numeric" },
+          },
           dayGridMonth: { buttonText: isNarrow ? "M" : "Month" },
         }}
         slotMinTime={slotRange.min}
@@ -95,6 +105,16 @@ export default function CalendarView(props: {
       dayHeaderFormat={{ weekday: "short", day: "numeric" }}
       dateClick={onDateClick}
       eventClick={onEventClick}
+      eventContent={(arg) => {
+        const location = (arg.event.extendedProps as { location?: string })?.location;
+        return (
+          <div className="fc-event-content-custom">
+            <div className="fc-event-title">{arg.event.title}</div>
+            {arg.timeText ? <div className="fc-event-time">{arg.timeText}</div> : null}
+            {location ? <div className="fc-event-location">{location}</div> : null}
+          </div>
+        );
+      }}
       />
     </div>
   );

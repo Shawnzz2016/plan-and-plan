@@ -126,17 +126,100 @@
 }
 
 .fc-responsive .fc-toolbar-title {
-  font-size: clamp(1rem, 2.2vw, 1.4rem);
+  font-size: clamp(0.85rem, 2vw, 1.25rem);
   line-height: 1.2;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .fc-responsive .fc-toolbar {
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  flex-wrap: nowrap;
+  gap: 0.35rem;
+  align-items: center;
 }
 
 .fc-responsive .fc-button {
-  padding: 0.3rem 0.6rem;
-  font-size: clamp(0.75rem, 1.6vw, 0.9rem);
+  padding: 0.22rem 0.45rem;
+  font-size: clamp(0.65rem, 1.5vw, 0.85rem);
+  line-height: 1.1;
+}
+
+.fc-responsive .fc-toolbar-chunk {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  flex-wrap: nowrap;
+}
+
+.fc-responsive .fc-toolbar .fc-button-group {
+  gap: 0.15rem;
+}
+
+.fc-responsive .fc-toolbar-title {
+  max-width: 32vw;
+}
+
+@media (max-width: 360px) {
+  .fc-responsive .fc-button {
+    padding: 0.18rem 0.35rem;
+    font-size: 0.62rem;
+  }
+  .fc-responsive .fc-toolbar-title {
+    max-width: 28vw;
+    font-size: 0.8rem;
+  }
+}
+
+.fc-responsive .fc-event-content-custom {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  white-space: normal;
+  line-height: 1.2;
+}
+
+.fc-responsive .fc-event-title {
+  font-weight: 600;
+  white-space: normal;
+}
+
+.fc-responsive .fc-event-time,
+.fc-responsive .fc-event-location {
+  font-size: 0.72rem;
+  white-space: normal;
+}
+
+.fc-responsive .fc-timegrid-event .fc-event-main {
+  padding: 2px 4px;
+}
+
+.fc-responsive .fc-daygrid-event .fc-event-main {
+  padding: 2px 4px;
+}
+
+.fc-responsive .fc-timegrid-event,
+.fc-responsive .fc-timegrid-event .fc-event-main {
+  overflow: visible;
+}
+
+.fc-responsive .fc-timegrid-event .fc-event-main-frame {
+  align-items: flex-start;
+}
+
+@media (max-width: 360px) {
+  .fc-responsive .fc-timegrid-slot {
+    height: 2.6rem;
+  }
+  .fc-responsive .fc-timegrid-slot-minor {
+    height: 1.3rem;
+  }
+  .fc-responsive .fc-event-title {
+    font-size: 0.7rem;
+  }
+  .fc-responsive .fc-event-time,
+  .fc-responsive .fc-event-location {
+    font-size: 0.66rem;
+  }
 }
