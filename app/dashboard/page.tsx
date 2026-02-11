@@ -60,7 +60,9 @@ export default function DashboardPage() {
         return;
       }
       setUserId(userData.user.id);
-      const id = await getOrCreateSchedule(userData.user.id, userData.user.email);
+      const phone =
+        (userData.user.user_metadata as { phone?: string } | undefined)?.phone ?? null;
+      const id = await getOrCreateSchedule(userData.user.id, userData.user.email, phone);
       setScheduleId(id);
       const list = await listEvents(id);
       setEvents(list);

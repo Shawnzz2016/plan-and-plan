@@ -131,20 +131,27 @@ function extractDates(draft: CourseDraft) {
   return dates;
 }
 
-export async function getOrCreateSchedule(userId: string, email?: string | null) {
+export async function getOrCreateSchedule(
+  userId: string,
+  email?: string | null,
+  phone?: string | null
+) {
   const supabase = getSupabase();
   if (!supabase) throw new Error("Supabase not configured");
 
   const { data: profile } = await supabase
     .from("users")
-    .select("id")
+    .select("id, phone")
     .eq("id", userId)
     .maybeSingle();
   if (!profile?.id) {
     await supabase.from("users").insert({
       id: userId,
       email: email ?? null,
+      phone: phone ?? null,
     });
+  } else if (phone && profile.phone !== phone) {
+    await supabase.from("users").update({ phone }).eq("id", userId);
   }
 
   const { data: existing, error } = await supabase

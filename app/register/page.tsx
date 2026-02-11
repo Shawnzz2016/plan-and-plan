@@ -134,7 +134,7 @@ export default function RegisterPage() {
                   return;
                 }
                 setLoading(true);
-                const { error: signUpError } = await supabase.auth.signUp({
+                const { data, error: signUpError } = await supabase.auth.signUp({
                   email,
                   password,
                   options: {
@@ -147,6 +147,13 @@ export default function RegisterPage() {
                 if (signUpError) {
                   setError(signUpError.message);
                   return;
+                }
+                if (data?.user?.id && data.session) {
+                  await supabase.from("users").upsert({
+                    id: data.user.id,
+                    email,
+                    phone: `${countryCode}${digits}`,
+                  });
                 }
                 setMessage(t("registerSuccess"));
               }}
